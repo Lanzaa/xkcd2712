@@ -1,0 +1,110 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+  <head>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="leaflet-1.9.3/leaflet.css" />
+    <script src="leaflet-1.9.3/leaflet.js"></script>
+    <!--<script src="coinlist.js"></script>-->
+    <title>Explore xkcd #2712 - Click and Drag - Zoomable Map</title>
+    <meta name="description" content="Explore xkcd 2712 Webcomic in a Google Maps like interface."/>
+    <style type="text/css">
+        #social {
+          position:absolute;bottom:65px;right:0px;z-index:10000px;
+        }
+        #corner {
+          position:absolute;bottom:0px;right:0px;z-index:10000px;
+          font-family: Arial;
+          font-size: 10px;
+          border-color: #f44;
+          text-align: right;
+        }
+        #projects {
+          border-top-left-radius: 4px;
+          text-align: left;
+          display: inline-block;
+          #background-color: rgba(255, 255, 255, 0.8);
+          font-size: 12px;
+          padding: 3px;
+        }
+        h1 {
+          font-size: 14px;
+          padding: 0px;
+          margin: 0px;
+          font-weight: normal;
+        }
+        #info {
+          border-top-left-radius: 4px;
+          #background-color: rgba(200, 200, 200, 0.8);
+          background-color: rgba(200, 0, 0, 0.8);
+          font-size: 14px;
+          padding: 3px;
+        }
+        .list {
+          overflow:auto;margin:3px;padding:0px;
+        }
+        .list li { 
+          list-style: none; float: left; margin-left: 20px; 
+        }
+        img.leaflet-tile {
+            background-color: #000; /* We want a dark background */
+        }
+        .leaflet-container { 
+            background: none !important
+        }
+        .leaflet-container img { 
+          image-rendering: optimizeSpeed;
+        } /* thanks chrismorgan */
+    </style>
+  </head>
+  <body style='background-color:#111;padding:0;margin:0;'>
+    <div id='map' style='height:100%;'></div>
+    <script>
+
+      function TileLayer(planet, bounds) {
+          var bx = bounds;
+          var by = bounds;
+          var layer_url = 'tile/' + planet + '_{x}_{y}.png';
+          var tiles = L.tileLayer(layer_url, {
+              maxNativeZoom: 8,
+              minNativeZoom: 8,
+              bounds: [[-4*bx,0], [0,4*by]],
+              tileSize: 1024,
+              attribution: '<a href="https://xkcd.com/2712/">xkcd 2712</a>'
+          });
+          return tiles;
+      }
+
+      var worlds = {
+          "origin": 4,
+          "earth": 16,
+          "enterprise": 2,
+          "sun": 16,
+          "roads": 16,
+          "outside": 16,
+      };
+
+      var planetLayers = {};
+      for (var planet in worlds) {
+          var bounds = worlds[planet];
+          planetLayers[planet] = TileLayer(planet, bounds);
+      }
+
+      // Create the map
+      var simpleX = L.CRS.Simple;
+      var map = L.map('map', {
+          crs: simpleX,
+          center: [-2,8],
+          zoom: 8,
+          minZoom: 1,
+          maxZoom: 10,
+          layers: [planetLayers["origin"]]
+      });
+
+      var markerLayers = {
+      };
+
+      // Not exposing other worlds for now
+      // L.control.layers(planetLayers, markerLayers).addTo(map);
+    </script>
+  </body>
+</html>
